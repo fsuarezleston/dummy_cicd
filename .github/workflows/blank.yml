@@ -32,6 +32,48 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Example
         run: |
+          
+          echo "Currently working in:"
           pwd
-          echo $GITHUB_WORKSPACE
-          ls $GITHUB_WORKSPACE
+
+          paths=()
+          ids=()
+          missing_ids=()
+          timestamps=()
+          
+          cd $GITHUB_WORKSPACE/Data/Simulations
+          for file in `find . -name "README.yaml"`; do
+           # The path to the file
+           path=$( echo ${file} | rev | cut -d"/" -f2- | rev )
+           paths+=(${path})
+           # The ID of the file
+           file_ID=$( grep '^ID:' ${file} | cut -d" " -f2 )
+           # If the file does not contain an ID
+           if ! [ $file_ID ]; then
+            ids+=(0)
+           else
+            ids+=(${file_ID})
+           fi
+           # The timestamp of the file
+           ts=$( git log -1 --pretty="format:%ct" ${file} )
+           timestamps+=(${ts})
+          done
+
+          echo "Analyzed systems"
+          echo ${paths[@]}
+          echo "IDs of the systems"
+          echo ${paths[@]}
+          echo "Timestamps of the files"
+          echo ${timestamps[@]}
+
+          echo "Duplicated indices"
+          duplicates=$( printf '%s\n' "${ids[@]}"|awk '!($0 in seen){seen[$0];next} 1' )
+          echo ${duplicates[@]}
+
+          echo "Unique duplicates"
+          unique=$( printf "%s\n" "${duplicates[@]}" | sort -u )
+          echo ${unique[@]}
+
+          echo "Max ID value"
+          max_id=$(sorted=($(printf '%s\n' "${ids[@]}" | sort -n )); echo ${sorted[${#sorted[@]}-1]})
+          echo ${max_id}
