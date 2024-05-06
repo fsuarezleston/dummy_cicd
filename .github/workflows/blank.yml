@@ -39,10 +39,9 @@ jobs:
           pwd
           
           cd $GITHUB_WORKSPACE/Data/Simulations
+          
           paths=()
           ids=()
-          
-          cd Data/Simulations
           
           # Iterate over all systems
           for file in `find . -name "README.yaml"`; do
