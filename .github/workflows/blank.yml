@@ -11,6 +11,9 @@ on:
   pull_request:
     branches: [ "main" ]
     paths: ['Data/Simulations/**']
+  merge:
+    branches: [ "main" ]
+    paths: ['Data/Simulations/**']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,13 +40,14 @@ jobs:
           
           echo "Currently working in:"
           pwd
-
-          paths=()
-          ids=()
-          missing_ids=()
-          timestamps=()
           
           cd $GITHUB_WORKSPACE/Data/Simulations
+          paths=()
+          ids=()
+          
+          cd Data/Simulations
+          
+          # Iterate over all systems
           for file in `find . -name "README.yaml"`; do
            # The path to the file
            path=$( echo ${file} | rev | cut -d"/" -f2- | rev )
@@ -56,47 +60,74 @@ jobs:
            else
             ids+=(${file_ID})
            fi
-           # The timestamp of the file
-           ts=$( git log -1 --pretty="format:%ct" ${file} )
-           timestamps+=(${ts})
           done
-
-          echo "Analyzed systems"
-          echo ${paths[@]}
-          echo "IDs of the systems"
-          echo ${ids[@]}
-          echo "Timestamps of the files"
-          echo ${timestamps[@]}
-
-          echo "Duplicated indices"
-          duplicates=$( printf '%s\n' "${ids[@]}"|awk '!($0 in seen){seen[$0];next} 1' )
-          echo ${duplicates[@]}
-
-          echo "Unique duplicates"
-          unique=$( printf "%s\n" "${duplicates[@]}" | sort -u )
-          echo ${unique[@]}
-
-          echo "Max ID value"
-          max_id=$(sorted=($(printf '%s\n' "${ids[@]}" | sort -n )); echo ${sorted[${#sorted[@]}-1]})
-          echo ${max_id}
-
-          # Find duplicates of each kind
-          for j in $( seq ${#paths[@]} ); do
-           for u in ${unique[@]}; do
-            if [[ ${ids[${j}]} -eq ${u} ]]; then
-             dupl_list[${u}]+=${paths[j]}" "
-             break
+          
+          # The list on unique IDs in the databank
+          idlist=($(printf '%s\n' "${ids[@]}" | sort -u | sort -n ))
+          
+          # Its maximum value
+          max_id=${idlist[${#idlist[@]}-1]} 
+          
+          # Find duplicates in the array of IDs; from https://stackoverflow.com/questions/22055238/search-duplicate-element-array
+          duplicates=($( printf '%s\n' "${ids[@]}"|awk '!($0 in seen){seen[$0];next} 1' ))
+          
+          if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -ne 0 ]]; then
+           echo "All systems have an unique ID associated"
+          else
+          
+           # The list of missing IDs
+           miss_id=()
+           if [[ ${#idlist[@]} -ne ${max_id} ]]; then
+            for id in $(seq ${max_id} ); do
+             if [[ ${idlist[$(($id-${#miss_id[@]}))]} -ne ${id} ]]; then
+              miss_id+=($id)
+             fi
+            done
+           fi
+          
+           fixlist=()
+           unique_ids=()
+          
+           # Repeated IDs
+           if [[ ${#duplicates[@]} -ne 0 ]]; then
+            unique_ids=($( printf "%s\n" "${duplicates[@]}" | sort -u ))
+           fi
+          
+           # No ID assigned
+           if [[ ${idlist[0]} -eq 0 ]] && [[ ${unique_ids[0]} -ne 0 ]]; then
+            unique_ids=(0 ${unique_ids[@]})
+           fi
+          
+           # Find all duplicated and missing IDs; ID matches the index of the array
+           for j in $( seq ${#paths[@]} ); do
+            for u in ${unique_ids[@]}; do
+             if [[ ${ids[${j}]} -eq ${u} ]]; then
+              fixlist[${u}]+=${paths[j]}" "
+              break
+             fi
+            done
+           done
+          
+           # Print the results
+           counter=0
+           for u in $( printf '%s\n' "${unique_ids[@]}" | sort -r  ); do
+            if [[ ${u} -eq 0 ]]; then
+             echo "Systems with no ID assigned:"
+             echo ${fixlist[${u}]}
+             list=(${fixlist[${u}]})
+             counter=$((${counter}+${#list[@]}))
+            else
+             echo "Systems with duplicated index ${u}":
+             echo ${fixlist[${u}]}
+             list=(${fixlist[${u}]})
+             counter=$((${counter}+${#list[@]}-1))
             fi
            done
-          done
-             
-          # Indicate the results in reverse order
-          for u in $( printf '%s\n' "${unique[@]}" | sort -r  ); do
-           if [[ ${u} -eq 0 ]]; then
-            echo "Systems with no ID assigned:"
-            echo ${dupl_list[${u}]}
-           else
-            echo "Systems with duplicated index ${u}":
-            echo ${dupl_list[${u}]}
+           echo "Number of systems to be fixed: "${counter}
+          
+           # Generate a list of valid IDs (may be larger than necessary, but it won't affect)
+           if [[ ${counter} -gt ${#miss_id[@]} ]]; then
+            miss_id=( ${miss_id[@]} $( seq $((${max_id}+1)) $((${max_id}+${counter}-${#miss_id[@]})) ) )
            fi
-          done
+          
+          fi
