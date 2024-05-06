@@ -77,3 +77,24 @@ jobs:
           echo "Max ID value"
           max_id=$(sorted=($(printf '%s\n' "${ids[@]}" | sort -n )); echo ${sorted[${#sorted[@]}-1]})
           echo ${max_id}
+
+          # Find duplicates of each kind
+          for j in $( seq ${#paths[@]} ); do
+           for u in ${unique[@]}; do
+            if [[ ${ids[${j}]} -eq ${u} ]]; then
+             dupl_list[${u}]+=${paths[j]}" "
+             break
+            fi
+           done
+          done
+             
+          # Indicate the results in reverse order
+          for u in $( printf '%s\n' "${unique[@]}" | sort -r  ); do
+           if [[ ${u} -eq 0 ]]; then
+            echo "Systems with no ID assigned:"
+            echo ${dupl_list[${u}]}
+           else
+            echo "Systems with duplicated index ${u}":
+            echo ${dupl_list[${u}]}
+           fi
+          done
