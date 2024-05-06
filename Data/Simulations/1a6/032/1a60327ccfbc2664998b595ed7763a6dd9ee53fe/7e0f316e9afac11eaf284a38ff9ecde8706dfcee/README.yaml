@@ -1,0 +1,42 @@
+DOI: 10.5281/zenodo.10966756
+TRJ:
+- - 45A2_3_10ps.xtc
+TPR:
+- - 45A2_1.tpr
+EDR:
+- - 45A2_3.edr
+SOFTWARE: gromacs
+FF: CHARMM36
+PREEQTIME: 300
+TIMELEFTOUT: 50
+COMPOSITION:
+  DMPS:
+    NAME: DMPS
+    MAPPING: mappingDMPScharmm.yaml
+    COUNT:
+    - 50
+    - 50
+  POT:
+    NAME: POT
+    MAPPING: mappingPOT.yaml
+    COUNT: 120
+  CLA:
+    NAME: CLA
+    MAPPING: mappingCLA.yaml
+    COUNT: 20
+  SOL:
+    NAME: TIP3
+    MAPPING: mappingTIP3PCHARMMgui.yaml
+    COUNT: 10826
+TOP:
+- - topol45.top
+TYPEOFSYSTEM: lipid monolayer
+SYSTEM: DMPS monolayers at 45 Å^2
+DIR_WRK: /Users/fabs/temp_nmr
+AUTHORS_CONTACT: Alexey M. Nesterenko
+BATCHID: 10.1021/acs.langmuir.9b01450
+TRAJECTORY_SIZE: 1799400504
+TRJLENGTH: 111520.0
+TEMPERATURE: 293.15
+NUMBER_OF_ATOMS: 43718
+DATEOFRUNNING: 23/04/2024
