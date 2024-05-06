@@ -62,7 +62,7 @@ jobs:
           echo "Analyzed systems"
           echo ${paths[@]}
           echo "IDs of the systems"
-          echo ${paths[@]}
+          echo ${ids[@]}
           echo "Timestamps of the files"
           echo ${timestamps[@]}
 
