@@ -3,10 +3,7 @@ name: UpdateIDs
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-    paths: ['Data/Simulations/**']
+  # Triggers the workflow on closed pull request events, but only for the "main" branch
   pull_request:
     types: 
       - closed
@@ -20,7 +17,8 @@ on:
 jobs:
   # This workflow contains a single job called "GenerateIDs"
   GenerateIDs:
-    if: github.event.pull_request.merged == true || github.event.push
+    # Execute the step if the pull request has been accepted
+    if: github.event.pull_request.merged == true
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -157,10 +155,11 @@ jobs:
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v6
+        # Trigger the step only if there have been changes made to the IDs
         if: steps.newids.outputs.newids == 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update IDs for pull request ${{ github.event.issue.number }}
+          commit-message: Update IDs for pull request \#${{ github.event.issue.number }}
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
           signoff: false
