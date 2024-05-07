@@ -132,7 +132,7 @@ jobs:
              for k in $(seq 1 $((${#ordered[@]}-1))); do
               echo "ID: "${new_id[counter]}" -> "${ordered[k]}
               echo " "
-              sed -i "" "s/ID:.*/ID: ${new_id[counter]}/" ${ordered[k]}/README.yaml
+              sed -i"" "s/ID:.*/ID: ${new_id[counter]}/" ${ordered[k]}/README.yaml
               counter=$((${counter}+1))
              done
             fi
