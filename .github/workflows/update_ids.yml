@@ -72,7 +72,7 @@ jobs:
            echo "All systems have an unique ID associated"
 
            # No IDs were generated
-           echo ::set-output name=status::false
+           echo "status=false" >> $GITHUB_OUTPUT
 
           else
            echo "Duplicates and/or missing IDs have been found"
@@ -150,7 +150,7 @@ jobs:
            echo ${new_id[$((${counter}-1))]} > COUNTER_ID
 
            # New IDs were generated
-           echo ::set-output name=status::true
+           echo "status=true" >> $GITHUB_OUTPUT
             
           fi
 
