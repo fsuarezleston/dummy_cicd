@@ -134,7 +134,7 @@ jobs:
             list=(${fixlist[${u}]})
             if [[ ${u} -eq 0 ]]; then
              echo "Fixing missing indices"
-             ordered=($( for path in ${list[@]}; do echo ${path} $( date -jf "%d/%m/%Y" $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 ) +"%s" ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
+             ordered=($( for path in ${list[@]}; do echo ${path} $( date -d $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 | awk -F' |/' '{printf "%s-%s-%s %s",$3,$2,$1,$4}' ) +%s ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
              for path in ${ordered[@]}; do
               echo "ID: "${miss_id[counter]}" -> "${ordered[k]}
               echo " "
@@ -143,7 +143,7 @@ jobs:
              done
             else
              echo "Fixing duplicated index ${u}"
-             ordered=($( for path in ${list[@]}; do echo ${path} $( date -jf "%d/%m/%Y" $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 ) +"%s" ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
+             ordered=($( for path in ${list[@]}; do echo ${path} $( date -d $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 | awk -F' |/' '{printf "%s-%s-%s %s",$3,$2,$1,$4}' ) +%s ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
              for k in $(seq 1 $((${#ordered[@]}-1))); do
               echo "ID: "${miss_id[counter]}" -> "${ordered[k]}
               echo " "
