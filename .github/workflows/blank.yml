@@ -70,6 +70,8 @@ jobs:
           if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -ne 0 ]]; then
            echo "All systems have an unique ID associated"
           else
+           echo "Duplicates and/or missing IDs have been found"
+           echo " "
           
            # The list of missing IDs
            miss_id=()
@@ -107,23 +109,48 @@ jobs:
            # Print the results
            counter=0
            for u in $( printf '%s\n' "${unique_ids[@]}" | sort -r  ); do
+            list=(${fixlist[${u}]})
             if [[ ${u} -eq 0 ]]; then
              echo "Systems with no ID assigned:"
-             echo ${fixlist[${u}]}
-             list=(${fixlist[${u}]})
+             echo ${list[@]}
              counter=$((${counter}+${#list[@]}))
             else
              echo "Systems with duplicated index ${u}":
-             echo ${fixlist[${u}]}
-             list=(${fixlist[${u}]})
+             echo ${list[@]}
              counter=$((${counter}+${#list[@]}-1))
             fi
            done
            echo "Number of systems to be fixed: "${counter}
+           echo " "
           
            # Generate a list of valid IDs (may be larger than necessary, but it won't affect)
            if [[ ${counter} -gt ${#miss_id[@]} ]]; then
             miss_id=( ${miss_id[@]} $( seq $((${max_id}+1)) $((${max_id}+${counter}-${#miss_id[@]})) ) )
            fi
+          
+           counter=0
+           # Apply changes in the IDs of the systems
+           for u in $( printf '%s\n' "${unique_ids[@]}" | sort -r  ); do
+            list=(${fixlist[${u}]})
+            if [[ ${u} -eq 0 ]]; then
+             echo "Fixing missing indices"
+             ordered=($( for path in ${list[@]}; do echo ${path} $( date -jf "%d/%m/%Y" $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 ) +"%s" ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
+             for path in ${ordered[@]}; do
+              echo "ID: "${miss_id[counter]}" -> "${ordered[k]}
+              echo " "
+              #echo "ID: "${miss_id[counter]} >> ${path}/README.yaml
+              counter=$((${counter}+1))
+             done
+            else
+             echo "Fixing duplicated index ${u}"
+             ordered=($( for path in ${list[@]}; do echo ${path} $( date -jf "%d/%m/%Y" $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 ) +"%s" ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
+             for k in $(seq 1 $((${#ordered[@]}-1))); do
+              echo "ID: "${miss_id[counter]}" -> "${ordered[k]}
+              echo " "
+              #sed -i "" "s/ID:.*/ID: ${miss_id[counter]}/" ${ordered[k]}/README.yaml
+              counter=$((${counter}+1))
+             done
+            fi
+           done
           
           fi
