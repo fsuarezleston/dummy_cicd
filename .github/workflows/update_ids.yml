@@ -163,7 +163,7 @@ jobs:
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: workflow_addID
+          branch: workflow_addID_PR${{ github.event.issue.number }}
           delete-branch: true
           title: Update IDs for pull request \#${{ github.event.number }}
           body: |
