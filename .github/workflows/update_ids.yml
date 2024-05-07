@@ -142,7 +142,6 @@ jobs:
            echo ${new_id[$((${counter}-1))]} > COUNTER_ID
           
           fi
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Create a pull-request to update IDs
         uses: actions/github-script@v6
@@ -166,4 +165,3 @@ jobs:
               issue_number: result.data.number,
               labels: ['feature', 'automated pr']
             });
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
