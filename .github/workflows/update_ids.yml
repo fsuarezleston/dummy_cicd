@@ -20,7 +20,7 @@ on:
 jobs:
   # This workflow contains a single job called "GenerateIDs"
   GenerateIDs:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event.push
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
