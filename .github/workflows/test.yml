@@ -99,8 +99,8 @@ jobs:
            # Find all duplicated and missing IDs; ID matches the index of the array
            for j in $( seq ${#paths[@]} ); do
             for u in ${unique_ids[@]}; do
-             if [[ ${ids[${j}]} -eq ${u} ]]; then
-              fixlist[${u}]+=${paths[j]}" "
+             if [[ ${ids[$((${j}-1))]} -eq ${u} ]]; then
+              fixlist[${u}]+=${paths[$((${j}-1))]}" "
               break
              fi
             done
