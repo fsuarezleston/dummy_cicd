@@ -1,5 +1,5 @@
 # A workflow to update the IDs of the systems
-name: UpdateIDs
+name: TEST
 
 # Controls when the workflow will run
 on:
@@ -88,11 +88,13 @@ jobs:
            if [[ ${#duplicates[@]} -ne 0 ]]; then
             unique_ids=($( printf "%s\n" "${duplicates[@]}" | sort -u ))
            fi
+           echo ${unique_ids[@]}
           
            # No ID assigned
            if [[ ${idlist[0]} -eq 0 ]] && [[ ${unique_ids[0]} -ne 0 ]]; then
             unique_ids=(0 ${unique_ids[@]})
            fi
+           echo ${unique_ids[@]}
           
            # Find all duplicated and missing IDs; ID matches the index of the array
            for j in $( seq ${#paths[@]} ); do
@@ -103,6 +105,7 @@ jobs:
              fi
             done
            done
+           echo ${fixlist[@]}
           
            # Print the results
            counter=0
