@@ -71,7 +71,7 @@ jobs:
           duplicates=($( printf '%s\n' "${ids[@]}"|awk '!($0 in seen){seen[$0];next} 1' ))
           echo ${duplicates[@]}
           
-          if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -ne 0 ]]; then
+          if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -gt 0 ]]; then
            echo "All systems have an unique ID associated"
 
            # No IDs were generated
@@ -91,7 +91,7 @@ jobs:
            echo ${unique_ids[@]}
           
            # No ID assigned
-           if [[ ${idlist[0]} -eq 0 ]] && [[ ${unique_ids[0]} -ne 0 ]]; then
+           if [[ ${idlist[0]} -eq 0 ]] && ( [[ ${unique_ids[0]} -ne 0 ]] || ! [[ ${unique_ids[0]} ]] ) ; then
             unique_ids=(0 ${unique_ids[@]})
            fi
            echo ${unique_ids[@]}
