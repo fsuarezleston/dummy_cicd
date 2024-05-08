@@ -9,6 +9,8 @@ on:
       - closed
     branches: [ "main" ]
     paths: ['Data/Simulations/**']
+    tags-ignore: 
+      - "UpdateID"
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
