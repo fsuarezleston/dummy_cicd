@@ -29,9 +29,6 @@ jobs:
       - name: Check IDs
         id: checkids
         run: |
-          echo "Currently working in:"
-          pwd
-          
           cd $GITHUB_WORKSPACE/Data/Simulations
           
           paths=()
@@ -62,14 +59,14 @@ jobs:
           duplicates=($( printf '%s\n' "${ids[@]}"|awk '!($0 in seen){seen[$0];next} 1' ))
           
           if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -ne 0 ]]; then
-           echo "All systems have an unique ID associated"
+           echo "All systems have an unique ID associated" >> $GITHUB_STEP_SUMMARY
 
            # No IDs were generated
            echo "newids=false" >> $GITHUB_OUTPUT
 
           else
-           echo "Duplicates and/or missing IDs have been found"
-           echo " "
+           echo "Duplicates and/or missing IDs have been found" >> $GITHUB_STEP_SUMMARY
+           echo " " >> $GITHUB_STEP_SUMMARY
           
            fixlist=()
            unique_ids=()
@@ -99,16 +96,16 @@ jobs:
            for u in $( printf '%s\n' "${unique_ids[@]}" | sort -r  ); do
             list=(${fixlist[${u}]})
             if [[ ${u} -eq 0 ]]; then
-             echo "Systems with no ID assigned:"
-             echo ${list[@]}
+             echo "Systems with no ID assigned:" >> $GITHUB_STEP_SUMMARY
+             echo ${list[@]} >> $GITHUB_STEP_SUMMARY
              counter=$((${counter}+${#list[@]}))
             else
-             echo "Systems with duplicated index ${u}":
-             echo ${list[@]}
+             echo "Systems with duplicated index ${u}": >> $GITHUB_STEP_SUMMARY
+             echo ${list[@]} >> $GITHUB_STEP_SUMMARY
              counter=$((${counter}+${#list[@]}-1))
             fi
            done
-           echo "Number of systems to be fixed: "${counter}
+           echo "Number of systems to be fixed: "${counter} >> $GITHUB_STEP_SUMMARY
            echo " "
           
           fi
@@ -116,8 +113,7 @@ jobs:
       - name: Check experiments
         id: checkexps
         run: |
-          echo "Currently working in:"
-          pwd
+          cd $GITHUB_WORKSPACE/Data/Simulations
 
           paths=()
           
@@ -131,10 +127,10 @@ jobs:
           done
 
           if [[ ${#paths[@]} -ne 0 ]]; then
-           echo "There has been no search for compatible experiments for:"
+           echo "There has been no search for compatible experiments for:" >> $GITHUB_STEP_SUMMARY
            for system in ${paths[@]}; do
-            echo ${system}
+            echo ${system} >> $GITHUB_STEP_SUMMARY
            done
           else
-           echo "A search for compatible experiments has been performed for all systems."
+           echo "A search for compatible experiments has been performed for all systems." >> $GITHUB_STEP_SUMMARY
           fi
