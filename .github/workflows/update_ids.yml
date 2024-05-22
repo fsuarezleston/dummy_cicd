@@ -15,9 +15,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Change the permisions for the token
-permissions: write-all
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "GenerateIDs"
@@ -163,7 +160,7 @@ jobs:
         # Trigger the step only if there have been changes made to the IDs
         if: steps.newids.outputs.newids == 'true'
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.WRITE_ACCESS_TOKEN }}
           commit-message: Update simulation IDs
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
