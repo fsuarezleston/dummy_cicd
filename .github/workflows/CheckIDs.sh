@@ -114,6 +114,6 @@ else
   echo ${new_id[$((${counter}-1))]} > COUNTER_ID
 
   # New IDs were generated
-  echo "newids=true" >> $GITHUB_OUTPUS
+  echo "newids=true" >> $GITHUB_OUTPUT
  fi
 fi
