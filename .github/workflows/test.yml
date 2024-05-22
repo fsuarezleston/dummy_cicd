@@ -37,4 +37,4 @@ jobs:
       - name: Assign new IDs
         id: newids
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }}
+          echo ${{ secrets.ACCESS_TOKEN }}
