@@ -1,4 +1,9 @@
-# A workflow to update the IDs of the systems
+# Generate an unique ID for each simulation in the NMRlipids databank
+#
+# Contact:
+#  Fabián Suárez-Lestón
+#  fabian.suarez.leston@usc.es
+
 name: UpdateIDs
 
 # Controls when the workflow will run
