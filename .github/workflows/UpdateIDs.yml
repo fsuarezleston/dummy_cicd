@@ -1,5 +1,8 @@
 # Generate an unique ID for each simulation in the NMRlipids databank
 #
+# This workflow generates a pull request with the modification of the
+# README files of conflictive systems.
+#
 # Contact:
 #  Fabián Suárez-Lestón
 #  fabian.suarez.leston@usc.es
