@@ -130,11 +130,9 @@ jobs:
 
           if [[ ${#paths[@]} -ne 0 ]]; then
            echo "### :warning: There has been no search for compatible experiments for:" >> $GITHUB_STEP_SUMMARY
-           echo ``` >> $GITHUB_STEP_SUMMARY
            for system in ${paths[@]}; do
-            echo ${system} >> $GITHUB_STEP_SUMMARY
+            echo ```${system}``` >> $GITHUB_STEP_SUMMARY
            done
-           echo ``` >> $GITHUB_STEP_SUMMARY
           else
            echo "### :white_check_mark: A search for compatible experiments has been performed for all systems." >> $GITHUB_STEP_SUMMARY
           fi
