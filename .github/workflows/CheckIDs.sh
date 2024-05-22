@@ -31,14 +31,14 @@ max_id=$( cat COUNTER_ID )
 duplicates=($( printf '%s\n' "${ids[@]}"|awk '!($0 in seen){seen[$0];next} 1' ))
 
 if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -ne 0 ]]; then
- echo "### :white_check_mark: All systems have an unique ID associated"
+ echo "### :white_check_mark: All systems have an unique ID associated" >> $GITHUB_STEP_SUMMARY
 
  # No IDs were generated
  #echo "newids=false" >> $GITHUB_OUTPUT
 
 else
- echo "### :warning: Duplicates and/or missing IDs have been found"
- echo " "
+ echo "### :warning: Duplicates and/or missing IDs have been found" >> $GITHUB_STEP_SUMMARY
+ echo " " >> $GITHUB_STEP_SUMMARY
 
  fixlist=()
  unique_ids=()
@@ -68,20 +68,20 @@ else
  for u in $( printf '%s\n' "${unique_ids[@]}" | sort -r  ); do
   list=(${fixlist[${u}]})
   if [[ ${u} -eq 0 ]]; then
-   echo "#### Systems with no ID assigned:"
+   echo "#### Systems with no ID assigned:" >> $GITHUB_STEP_SUMMARY
    for item in ${list[@]}; do
-    echo \`${list[@]}\`
+    echo \`${list[@]}\` >> $GITHUB_STEP_SUMMARY
    done
    counter=$((${counter}+${#list[@]}))
   else
    echo "#### Systems with duplicated index ${u}": 
    for item in ${list[@]}; do
-    echo \`${list[@]}\`
+    echo \`${list[@]}\` >> $GITHUB_STEP_SUMMARY
    done
    counter=$((${counter}+${#list[@]}-1))
   fi
  done
- echo "#### Number of systems to be fixed: "${counter}
- echo " "
+ echo "#### Number of systems to be fixed: "${counter} >> $GITHUB_STEP_SUMMARY
+ echo " " >> $GITHUB_STEP_SUMMARY
 
 fi
