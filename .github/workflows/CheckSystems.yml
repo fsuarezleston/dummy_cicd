@@ -30,4 +30,4 @@ jobs:
         run: |
           pwd
           ls
-          bash CheckIDs.sh >> $GITHUB_STEP_SUMMARY
+          bash .github/workflows/CheckIDs.sh >> $GITHUB_STEP_SUMMARY
