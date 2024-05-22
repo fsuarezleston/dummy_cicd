@@ -1,5 +1,12 @@
 #!/bin/bash
-# Check if simulation IDs are missing or duplicated
+# Check if all systems in the NMRlipids databank contain an unique ID
+# 
+# If the argument "generate" is provided, README.yaml files where
+# indices are duplicated or missing will be modified to correct it.
+#
+# Contact:
+#  Fabián Suárez-Lestón
+#  fabian.suarez.leston@usc.es
 
 cd Data/Simulations
 
