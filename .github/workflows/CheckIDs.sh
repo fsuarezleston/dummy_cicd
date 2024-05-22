@@ -95,7 +95,7 @@ else
     echo "#### Fixing missing indices..." >> $GITHUB_STEP_SUMMARY
     ordered=($( for path in ${list[@]}; do echo ${path} $( date -d $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 | awk -F' |/' '{printf "%s-%s-%s %s",$3,$2,$1,$4}' ) +%s ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
     for path in ${ordered[@]}; do
-     echo "#### ID "${new_id[counter]}" -> \`"${path}"\`" >> $GITHUB_STEP_SUMMARY
+     echo "#### ID "${new_id[counter]}" :arrow_right: \`"${path}"\`" >> $GITHUB_STEP_SUMMARY
      echo "ID: "${new_id[counter]} >> ${path}/README.yaml
      counter=$((${counter}+1))
     done
@@ -103,7 +103,7 @@ else
     echo "#### Fixing duplicated index ${u}..." >> $GITHUB_STEP_SUMMARY
     ordered=($( for path in ${list[@]}; do echo ${path} $( date -d $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 | awk -F' |/' '{printf "%s-%s-%s %s",$3,$2,$1,$4}' ) +%s ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
     for k in $(seq 1 $((${#ordered[@]}-1))); do
-     echo "#### ID "${new_id[counter]}" -> \`"${ordered[k]}"\`" >> $GITHUB_STEP_SUMMARY
+     echo "#### ID "${new_id[counter]}" :arrow_right: \`"${ordered[k]}"\`" >> $GITHUB_STEP_SUMMARY
      sed -i"" "s/ID:.*/ID: ${new_id[counter]}/" ${ordered[k]}/README.yaml
      counter=$((${counter}+1))
     done
