@@ -1,4 +1,10 @@
-# A workflow to test the systems added
+# Check if all systems in the NMRlipids databank contain an unique ID and
+# if a search for compatible experiments has been conducted
+#
+# Contact:
+#  Fabián Suárez-Lestón
+#  fabian.suarez.leston@usc.es
+
 name: CheckSystems
 
 # Controls when the workflow will run
