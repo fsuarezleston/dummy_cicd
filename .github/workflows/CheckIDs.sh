@@ -34,7 +34,7 @@ if [[ ${#duplicates[@]} -eq 0 ]] && [[ ${idlist[0]} -ne 0 ]]; then
  echo "### :white_check_mark: All systems have an unique ID associated"
 
  # No IDs were generated
- echo "newids=false" #>> $GITHUB_OUTPUT
+ #echo "newids=false" >> $GITHUB_OUTPUT
 
 else
  echo "### :warning: Duplicates and/or missing IDs have been found"
