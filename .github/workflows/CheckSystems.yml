@@ -31,4 +31,4 @@ jobs:
       - name: Check Experiments
         id: checkexps
         run: |
-          bash .github/workflows/CheckExperiments.sh >> $GITHUB_STEP_SUMMARY
+          . .github/workflows/CheckExperiments.sh
