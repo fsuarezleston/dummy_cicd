@@ -7,8 +7,6 @@ on:
   pull_request:
     branches: [ "main" ]
     paths: ['Data/Simulations/**']
-    tags-ignore: 
-      - "UpdateID"
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,6 +26,9 @@ jobs:
       - name: Check IDs
         id: checkids
         run: |
-          pwd
-          ls
           bash .github/workflows/CheckIDs.sh >> $GITHUB_STEP_SUMMARY
+
+      - name: Check Experiments
+        id: checkexps
+        run: |
+          bash .github/workflows/CheckExperiments.sh >> $GITHUB_STEP_SUMMARY
