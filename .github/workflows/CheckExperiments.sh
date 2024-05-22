@@ -1,5 +1,10 @@
 #!/bin/bash
-# Check if the search for experiments have been performed
+# Check if there has been conducted a search for compatible experiments for all
+# simulations in the NMRlipids databank
+#
+# Contact:
+#  Fabián Suárez-Lestón
+#  fabian.suarez.leston@usc.es
 
 cd Data/Simulations
 
