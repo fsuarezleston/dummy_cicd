@@ -84,4 +84,36 @@ else
  echo "#### Number of systems to be fixed: "${counter} >> $GITHUB_STEP_SUMMARY
  echo " " >> $GITHUB_STEP_SUMMARY
 
+ if [[ "${1}" = "generate" ]]; then
+  # Generate a list of valid IDs
+  new_id=( $( seq $((${max_id}+1)) $((${max_id}+${counter})) ) )
+  counter=0
+  # Apply changes in the IDs of the systems
+  for u in $( printf '%s\n' "${unique_ids[@]}" | sort -r  ); do
+   list=(${fixlist[${u}]})
+   if [[ ${u} -eq 0 ]]; then
+    echo "#### Fixing missing indices" >> $GITHUB_STEP_SUMMARY
+    ordered=($( for path in ${list[@]}; do echo ${path} $( date -d $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 | awk -F' |/' '{printf "%s-%s-%s %s",$3,$2,$1,$4}' ) +%s ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
+    for path in ${ordered[@]}; do
+     echo "#### ID: "${new_id[counter]}" -> "${path} >> $GITHUB_STEP_SUMMARY
+     echo "ID: "${new_id[counter]} >> ${path}/README.yaml
+     counter=$((${counter}+1))
+    done
+   else
+    echo "#### Fixing duplicated index ${u}" >> $GITHUB_STEP_SUMMARY
+    ordered=($( for path in ${list[@]}; do echo ${path} $( date -d $( grep "DATEOFRUNNING:" ${path}/README.yaml | cut -d" " -f2 | awk -F' |/' '{printf "%s-%s-%s %s",$3,$2,$1,$4}' ) +%s ) $( git log -1 --pretty="format:%ct" "${path}/README.yaml" ); done | sort -n -k2,3 | cut -d" " -f1 ))
+    for k in $(seq 1 $((${#ordered[@]}-1))); do
+     echo "#### ID: "${new_id[counter]}" -> "${ordered[k]} >> $GITHUB_STEP_SUMMARY
+     sed -i"" "s/ID:.*/ID: ${new_id[counter]}/" ${ordered[k]}/README.yaml
+     counter=$((${counter}+1))
+    done
+   fi
+  done
+ 
+  # Update the list of used IDs
+  echo ${new_id[$((${counter}-1))]} > COUNTER_ID
+
+  # New IDs were generated
+  echo "newids=true" >> $GITHUB_OUTPUS
+ fi
 fi
