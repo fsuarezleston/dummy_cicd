@@ -15,10 +15,10 @@ for file in `find . -name "README.yaml"`; do
 done
 
 if [[ ${#paths[@]} -ne 0 ]]; then
- echo "### :warning: There has been no search for compatible experiments for:"
+ echo "### :warning: There has been no search for compatible experiments for:" >> $GITHUB_STEP_SUMMARY
  for system in ${paths[@]}; do
-  echo \`${system}\`
+  echo \`${system}\` >> $GITHUB_STEP_SUMMARY
  done
 else
- echo "### :white_check_mark: A search for compatible experiments has been performed for all systems."
+ echo "### :white_check_mark: A search for compatible experiments has been performed for all systems." >> $GITHUB_STEP_SUMMARY
 fi
