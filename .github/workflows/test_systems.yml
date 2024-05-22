@@ -65,7 +65,7 @@ jobs:
            echo "newids=false" >> $GITHUB_OUTPUT
 
           else
-           echo "::warning:: Duplicates and/or missing IDs have been found" >> $GITHUB_STEP_SUMMARY
+           echo ":warning: Duplicates and/or missing IDs have been found" >> $GITHUB_STEP_SUMMARY
            echo " " >> $GITHUB_STEP_SUMMARY
           
            fixlist=()
@@ -127,7 +127,7 @@ jobs:
           done
 
           if [[ ${#paths[@]} -ne 0 ]]; then
-           echo "::warning:: There has been no search for compatible experiments for:" >> $GITHUB_STEP_SUMMARY
+           echo ":warning: There has been no search for compatible experiments for:" >> $GITHUB_STEP_SUMMARY
            for system in ${paths[@]}; do
             echo ${system} >> $GITHUB_STEP_SUMMARY
            done
