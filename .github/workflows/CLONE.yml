@@ -1,0 +1,15 @@
+name: CLONE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  CLONE:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: CLONE
+        id: CLONE
+        run: |
+          git clone https://github.com/NMRLipids/Databank
