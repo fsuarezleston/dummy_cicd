@@ -77,13 +77,13 @@ else
   if [[ ${u} -eq 0 ]]; then
    echo "#### Systems with no ID assigned:" >> $GITHUB_STEP_SUMMARY
    for item in ${list[@]}; do
-    echo \`${list[@]}\` >> $GITHUB_STEP_SUMMARY
+    echo \`${item}\` >> $GITHUB_STEP_SUMMARY
    done
    counter=$((${counter}+${#list[@]}))
   else
    echo "#### Systems with duplicated index ${u}": 
    for item in ${list[@]}; do
-    echo \`${list[@]}\` >> $GITHUB_STEP_SUMMARY
+    echo \`${item}\` >> $GITHUB_STEP_SUMMARY
    done
    counter=$((${counter}+${#list[@]}-1))
   fi
